@@ -156,6 +156,7 @@ public struct PreviewImagesView: View {
             .onZoomEnded { scale in if scale == 1 { setToolbarVisible(true) } }
             .onSingleTap { setToolbarVisible(!showToolbar) }
             .accessibilityLabel("Photo \(index + 1) of \(imageCount)")
+            .accessibilityIdentifier("image-viewer-page-\(index)")
         } else if failedImages.contains(index) {
             Button {
                 failedImages.remove(index)
