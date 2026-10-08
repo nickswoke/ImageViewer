@@ -1,0 +1,13 @@
+// swift-tools-version: 5.9
+import PackageDescription
+
+let package = Package(
+    name: "ImageViewer",
+    platforms: [.iOS(.v17)],
+    products: [
+        .library(name: "ImageViewer", targets: ["ImageViewer"])
+    ],
+    targets: [
+        .target(name: "ImageViewer")
+    ]
+)
