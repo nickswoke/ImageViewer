@@ -86,6 +86,13 @@ public struct PreviewImagesView: View {
                             downloadAction: currentImageDownload,
                             shareAction: currentImageShare
                         )
+                        .overlay(alignment: .trailing) {
+                            Text("\(currentImageIndex + 1) of \(imageCount)")
+                                .font(.subheadline.monospacedDigit())
+                                .foregroundStyle(.white)
+                                .accessibilityIdentifier("image-viewer-position")
+                                .padding(.trailing, 4)
+                        }
                         .padding(.top, geometry.safeAreaInsets.top + 4)
                         .padding(.horizontal, 16)
                         Spacer()
@@ -107,9 +114,11 @@ public struct PreviewImagesView: View {
         .ignoresSafeArea()
         .task(id: "\(currentImageIndex)-\(attempts[currentImageIndex, default: 0])") {
             guard case .lazy(let count, let imageAt) = source else { return }
-            let visible = Set(max(0, currentImageIndex - 1)...min(count - 1, currentImageIndex + 1))
-            loadedImages = loadedImages.filter { visible.contains($0.key) }
-            failedImages = failedImages.intersection(visible)
+            let visible = [currentImageIndex, currentImageIndex - 1, currentImageIndex + 1]
+                .filter { (0..<count).contains($0) }
+            let visibleSet = Set(visible)
+            loadedImages = loadedImages.filter { visibleSet.contains($0.key) }
+            failedImages = failedImages.intersection(visibleSet)
             for index in visible where loadedImages[index] == nil && !failedImages.contains(index) {
                 do {
                     let image = try await imageAt(index)
